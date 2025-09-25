@@ -11,13 +11,16 @@ function Layout() {
     <nav>
       <ul>
         <li>
-          <NavLink to="/titulo">Título</NavLink>
+          <NavLink to="/Titulo">Título</NavLink>
         </li>
         <li>
-          <NavLink to="/aficiones">Aficiones</NavLink>
+          <NavLink to="/Aficiones">Aficiones</NavLink>
         </li>
         <li>
-          <NavLink to="/listado">Listado</NavLink>
+          <NavLink to="/Listado">Listado</NavLink>
+        </li>
+        <li>
+          <NavLink to="/Formulario">Formulario de contacto</NavLink>
         </li>
       </ul>
     </nav>
@@ -35,10 +38,11 @@ export default function AppRouter () {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Navigate to="/titulo" />} /> {/* Redirige a /titulo por defecto */}
-        <Route path="titulo" element={<Titulo />} />
-        <Route path="aficiones" element={<Aficiones />} />
-        <Route path="listado" element={<Listado />} />
+        <Route index element={<Navigate to="/Titulo" />} /> {/* Redirige a /Titulo por defecto */}
+        <Route path="Titulo" element={<Titulo />} />
+        <Route path="Aficiones" element={<Aficiones />} />
+        <Route path="Listado" element={<Listado />} />
+      <Route path="Formulario de contacto" element={<Formulario />} />
         <Route path="*" element={<NotFound />} /> {/* Ruta para manejar 404 */}
       </Route>
     </Routes>
