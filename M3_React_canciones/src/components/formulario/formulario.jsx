@@ -1,4 +1,3 @@
-
 import { useCallback } from "react";
 import styles from "./formulario.module.css";
 
@@ -7,12 +6,10 @@ export default function Formulario() {
     e.preventDefault();
     const form = e.currentTarget;
 
-   
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
-
 
     const all = Array.from(form.elements).map((el) => ({
       tag: el.tagName.toLowerCase(),
@@ -20,9 +17,13 @@ export default function Formulario() {
       name: el.name || null,
       id: el.id || null,
       value:
-        el.type === "checkbox" ? el.checked
-        : el.type === "radio" ? (el.checked ? el.value : "")
-        : el.value,
+        el.type === "checkbox"
+          ? el.checked
+          : el.type === "radio"
+          ? el.checked
+            ? el.value
+            : ""
+          : el.value,
       disabled: el.disabled || false,
       required: el.required || false,
     }));
@@ -53,12 +54,15 @@ export default function Formulario() {
     <section className={styles.wrap}>
       <header className={styles.header}>
         <h2>Formulario de ejemplo</h2>
-        <p className={styles.subtitle}>
-          Validaciones nativas HTML y estilos.
-        </p>
+        <p className={styles.subtitle}>Validaciones nativas HTML y estilos.</p>
       </header>
 
-      <form className={styles.form} onSubmit={handleSubmit} onReset={handleReset} noValidate>
+      <form
+        className={styles.form}
+        onSubmit={handleSubmit}
+        onReset={handleReset}
+        noValidate
+      >
         {/* ——— Datos personales ——— */}
         <fieldset className={styles.fieldset}>
           <legend className={styles.legend}>Datos personales</legend>
@@ -116,8 +120,6 @@ export default function Formulario() {
                 title="Introduce un teléfono válido"
               />
             </label>
-
-            
           </div>
         </fieldset>
 
@@ -126,11 +128,7 @@ export default function Formulario() {
           <div className={styles.grid2}>
             <label className={styles.label}>
               Hora preferida de contacto
-              <input
-                className={styles.input}
-                name="contactTime"
-                type="time"
-              />
+              <input className={styles.input} name="contactTime" type="time" />
             </label>
           </div>
         </fieldset>
@@ -142,8 +140,15 @@ export default function Formulario() {
           <div className={styles.grid2}>
             <label className={styles.label}>
               País *
-              <select className={styles.select} name="country" required defaultValue="">
-                <option value="" disabled>Selecciona...</option>
+              <select
+                className={styles.select}
+                name="country"
+                required
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Selecciona...
+                </option>
                 <option value="ES">España</option>
                 <option value="AR">Argentina</option>
                 <option value="MX">México</option>
@@ -151,12 +156,9 @@ export default function Formulario() {
                 <option value="CL">Chile</option>
               </select>
             </label>
-
-            
           </div>
 
-          
-                   <label className={styles.label}>
+          <label className={styles.label}>
             Mensaje para mi *
             <textarea
               className={styles.textarea}
@@ -176,8 +178,12 @@ export default function Formulario() {
 
         {/* ——— Acciones ——— */}
         <div className={styles.actions}>
-          <button type="reset" className={styles.btnSecondary}>Reset</button>
-          <button type="submit" className={styles.btnPrimary}>Enviar</button>
+          <button type="reset" className={styles.btnSecondary}>
+            Reset
+          </button>
+          <button type="submit" className={styles.btnPrimary}>
+            Enviar
+          </button>
         </div>
       </form>
     </section>

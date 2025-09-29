@@ -52,7 +52,7 @@ export default function ApiCRUD() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (canceled) return;
-        setMovies((Array.isArray(data) ? data : []).map(toMovie));
+        setCanciones((Array.isArray(data) ? data : []).map(toCancion));
         setError(null);
       } catch (e) {
         if (!canceled) setError(e.message || "Error cargando API");

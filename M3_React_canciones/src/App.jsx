@@ -1,11 +1,11 @@
-import { useState } from 'react'
- import Titulo from './components/titulo/Titulo'
-  import Listado from './components/Listado/listado'
-import './App.css'
-import Aficiones from './components/Aficiones/Aficiones'
+import { useState } from "react";
+import Titulo from "./components/titulo/Titulo";
+import Listado from "./components/Listado/listado";
+import "./App.css";
+import Aficiones from "./components/aficiones/aficiones";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
@@ -24,7 +24,7 @@ function App() {
         </p>
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
