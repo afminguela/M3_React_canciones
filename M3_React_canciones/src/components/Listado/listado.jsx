@@ -1,5 +1,5 @@
 import React from "react";
-import cancionesData from "../../../public/Canciones.json";
+import cancionesData from "../../Canciones.json";
 
 function Listado() {
 

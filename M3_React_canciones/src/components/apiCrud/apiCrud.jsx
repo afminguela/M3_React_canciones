@@ -1,4 +1,4 @@
-// src/components/ApiMovieCRUD/ApiMovieCRUD.jsx
+
 import { useEffect, useMemo, useState } from "react";
 import styles from "./apiCrud.module.css"; 
 
@@ -14,17 +14,17 @@ function toCancion(p) {
   return {
     id,
     titulo: cap(p.title ?? "Untitled"),
-    año: Number(p.year ?? pseudoYear),
-    generos: [], // la API no tiene géneros
-    calificacion: Number(p.rating ?? pseudoRating.toFixed(1)),
-    poster: "", // sin imagen en esta API
-    plot: p.body ?? "",
+    album: p.body ? cap(p.body.split(" ").slice(0, 3).join(" ")) : "Unknown Album",
+    artista: [], 
+    valoracion: Number(p.rating ?? pseudoValoracion.toFixed(1)),
+    poster: "", 
+    duracion: pseudoDuracion, 
   };
 }
 
 export default function ApiCRUD() {
   // ---- Estado base ----
-  const [movies, setMovies] = useState([]);
+  const [canciones, setCanciones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -38,9 +38,9 @@ export default function ApiCRUD() {
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({
     title: "",
-    year: "",
-    rating: "",
-    plot: "",
+    duracion: "",
+    valoracion: "",
+    album: "",
   });
 
   // ---- READ: carga inicial ----
@@ -65,42 +65,42 @@ export default function ApiCRUD() {
 
   // ---- Derivados ----
   const filteredSorted = useMemo(() => {
-    const f = movies
-      .filter(m => m.title.toLowerCase().includes(query.trim().toLowerCase()))
-      .filter(m => Number(m.rating ?? 0) >= Number(minRating));
+    const f = canciones
+      .filter(m => m.titulo.toLowerCase().includes(query.trim().toLowerCase()))
+      .filter(m => Number(m.valoracion ?? 0) >= Number(minRating));
 
     const s = [...f].sort((a, b) => {
       let comp = 0;
-      if (sortBy === "rating") comp = Number(a.rating ?? 0) - Number(b.rating ?? 0);
-      else if (sortBy === "year") comp = Number(a.year ?? 0) - Number(b.year ?? 0);
-      else if (sortBy === "title") comp = a.title.localeCompare(b.title);
+      if (sortBy === "rating") comp = Number(a.valoracion ?? 0) - Number(b.valoracion ?? 0);
+      else if (sortBy === "year") comp = Number(a.duracion ?? 0) - Number(b.duracion ?? 0);
+      else if (sortBy === "title") comp = a.titulo.localeCompare(b.titulo);
       return sortDir === "asc" ? comp : -comp;
     });
     return s;
-  }, [movies, query, minRating, sortBy, sortDir]);
+  }, [canciones, query, minRating, sortBy, sortDir]);
 
   const stats = useMemo(() => {
-    if (!movies.length) return { count: 0, avgRating: 0, best: null };
-    const total = movies.reduce((s, m) => s + (Number(m.rating) || 0), 0);
-    const avgRating = total / movies.length;
-    const best = movies.reduce((acc, m) =>
-      (Number(m.rating ?? -1) > Number(acc?.rating ?? -1) ? m : acc), null);
-    return { count: movies.length, avgRating, best };
-  }, [movies]);
+    if (!canciones.length) return { count: 0, avgRating: 0, best: null };
+    const total = canciones.reduce((s, m) => s + (Number(m.valoracion) || 0), 0);
+    const avgRating = total / canciones.length;
+    const best = canciones.reduce((acc, m) =>
+      (Number(m.valoracion ?? -1) > Number(acc?.valoracion ?? -1) ? m : acc), null);
+    return { count: canciones.length, avgRating, best };
+  }, [canciones]);
 
   // ---- Handlers Form ----
   const startCreate = () => {
     setEditingId(null);
-    setForm({ title: "", year: "", rating: "", plot: "" });
+    setForm({ title: "", duracion: "", valoracion: "", album: "" });
   };
 
   const startEdit = (m) => {
     setEditingId(m.id);
     setForm({
-      title: m.title ?? "",
-      year: m.year ?? "",
-      rating: m.rating ?? "",
-      plot: m.plot ?? "",
+      title: m.titulo ?? "",
+      duracion: m.duracion ?? "",
+      valoracion: m.valoracion ?? "",
+      album: m.album ?? "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -121,10 +121,10 @@ export default function ApiCRUD() {
     }
 
     const payload = {
-      title: form.title.trim(),
-      body: form.plot.trim(),
-      year: Number(form.year) || undefined,
-      rating: Number(form.rating) || undefined,
+      titulo: form.title.trim(),
+      duracion: form.duracion.trim(),
+      valoracion: Number(form.valoracion) || undefined,
+      album: form.album.trim(),
     };
 
     try {
@@ -136,9 +136,9 @@ export default function ApiCRUD() {
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const created = await res.json(); // id simulado por la API
-        const movie = toMovie({ ...payload, id: created.id ?? Date.now() });
-        setMovies((prev) => [movie, ...prev]); // añadimos arriba
+        const created = await res.json(); 
+        const cancion = toCancion({ ...payload, id: created.id ?? Date.now() });
+        setCanciones((prev) => [cancion, ...prev]); 
       } else {
         // UPDATE
         const res = await fetch(`${API}/${editingId}`, {
@@ -148,13 +148,13 @@ export default function ApiCRUD() {
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const updated = await res.json();
-        setMovies((prev) =>
-          prev.map((m) => (m.id === editingId ? toMovie({ ...m, ...updated }) : m))
+        setCanciones((prev) =>
+          prev.map((m) => (m.id === editingId ? toCancion({ ...m, ...updated }) : m))
         );
       }
       // reset form
       setEditingId(null);
-      setForm({ title: "", year: "", rating: "", plot: "" });
+      setForm({ titulo: "", duracion: "", valoracion: "", album: "" });
       setError(null);
     } catch (e2) {
       setError(e2.message || "Error enviando datos");
@@ -167,7 +167,7 @@ export default function ApiCRUD() {
     try {
       const res = await fetch(`${API}/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setMovies((prev) => prev.filter((m) => m.id !== id));
+      setCanciones((prev) => prev.filter((m) => m.id !== id));
     } catch (e2) {
       setError(e2.message || "Error borrando");
     }

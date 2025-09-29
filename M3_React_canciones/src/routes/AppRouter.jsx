@@ -1,10 +1,10 @@
-import { Routes, Route, Navigate, NavLink, Outlet } from "react-router-dom"; // 1. Importamos lo que necesitamos de react-router-dom
+import { Routes, Route, Navigate, NavLink, Outlet } from "react-router-dom"; // 1. 
 import App from "../App";
 import Aficiones from "../components/Aficiones/Aficiones";
 import Listado from "../components/Listado/listado";
 import Titulo from "../components/titulo/Titulo";
 
-// 2. Creamos un componente de Layout para la navegación común
+
 function Layout() {
     return (
   <div>
@@ -25,7 +25,7 @@ function Layout() {
       </ul>
     </nav>
     <hr />
-    <Outlet /> {/* Aquí se renderizarán las rutas hijas */}
+    <Outlet /> 
   </div>
 );
 }
